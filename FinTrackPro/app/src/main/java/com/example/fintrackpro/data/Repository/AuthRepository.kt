@@ -16,4 +16,8 @@ class AuthRepository(private val userDao: UserDao) {
     suspend fun updateLastLogin(userId: Int) {
         userDao.updateLastLogin(userId, System.currentTimeMillis())
     }
+
+    suspend fun getUserByUsername(username: String): User? {
+        return userDao.getUserByUsername(username)
+    }
 }
