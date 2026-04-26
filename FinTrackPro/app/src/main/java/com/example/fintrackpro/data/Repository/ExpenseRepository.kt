@@ -32,6 +32,10 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
     fun getRecentExpenses(userId: Int, limit: Int = 5): Flow<List<Expense>> =
         expenseDao.getRecentExpenses(userId, limit)
 
+    suspend fun getTotalExpensesForPeriod(userId: Int, startDate: Date, endDate: Date): Double {
+        return expenseDao.getTotalExpensesForPeriod(userId, startDate, endDate) ?: 0.0
+    }
+
     suspend fun getCategorySpendingTotals(
         userId: Int, startDate: Date, endDate: Date
     ): List<ExpenseDao.CategorySpendingSummary> =

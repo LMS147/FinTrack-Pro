@@ -29,6 +29,11 @@
     <string name="budget">Budget</string>
     <string name="reports">Reports</string>
     <string name="profile">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="set_budget">Set Budget</string>
+    <string name="max_goal">Max Goal</string>
+    <string name="min_goal">Min Goal</string>
+    <string name="save_budget">Save Budget</string>
+    <string name="maximum_spending_goal">Maximum Sepnding Goal</string>
+    <string name="minimum_spending_goal">Minimum Spending Goal</string>
+    <string name="set_monthly_budget">Set Monthly Budget</string>
 </resources>
