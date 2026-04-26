@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
  * Stores references to receipt photos attached to expenses.
  */
 @Entity(tableName = "photos")
-data class Photo(
+data class ExpensePhoto(
     @PrimaryKey(autoGenerate = true)
     val photoId: Int = 0,
 

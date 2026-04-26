@@ -20,7 +20,7 @@ import com.example.fintrackpro.data.Dao.*
         Category::class,
         Expense::class,
         Budget::class,
-        Photo::class
+        ExpensePhoto::class
     ],
     version = 1,
     exportSchema = false

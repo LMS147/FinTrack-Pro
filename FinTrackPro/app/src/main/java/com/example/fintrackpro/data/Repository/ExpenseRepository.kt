@@ -2,32 +2,38 @@ package com.example.fintrackpro.data.Repository
 
 import com.example.fintrackpro.data.Dao.ExpenseDao
 import com.example.fintrackpro.data.entity.Expense
+import com.example.fintrackpro.data.entity.ExpensePhoto
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 class ExpenseRepository(private val expenseDao: ExpenseDao) {
 
-    suspend fun addExpense(expense: Expense): Long {
-        return expenseDao.insertExpense(expense)
-    }
+    suspend fun addExpense(expense: Expense): Long = expenseDao.insertExpense(expense)
 
-    fun getExpensesForPeriod(userId: Int, startDate: Date, endDate: Date): Flow<List<Expense>> {
-        return expenseDao.getExpensesBetweenDates(userId, startDate, endDate)
-    }
+    suspend fun updateExpense(expense: Expense) = expenseDao.updateExpense(expense)
 
-    suspend fun getCategoryTotals(userId: Int, startDate: Date, endDate: Date): List<ExpenseDao.CategorySpendingSummary> {
-        return expenseDao.getCategorySpendingTotals(userId, startDate, endDate)
-    }
+    suspend fun deleteExpense(expense: Expense) = expenseDao.deleteExpense(expense)
 
-    fun getTotalIncome(userId: Int): Flow<Double?> {
-        return expenseDao.getTotalIncome(userId)
-    }
+    fun getExpensesForPeriod(userId: Int, startDate: Date, endDate: Date): Flow<List<Expense>> =
+        expenseDao.getExpensesBetweenDates(userId, startDate, endDate)
 
-    fun getTotalExpenses(userId: Int): Flow<Double?> {
-        return expenseDao.getTotalExpenses(userId)
-    }
+    suspend fun getExpenseById(expenseId: Int): Expense? = expenseDao.getExpenseById(expenseId)
 
-    fun getRecentExpenses(userId: Int, limit: Int = 5): Flow<List<Expense>> {
-        return expenseDao.getRecentExpenses(userId, limit)
-    }
+    suspend fun addPhoto(photo: ExpensePhoto): Long = expenseDao.insertPhoto(photo)
+
+    suspend fun getPhotoForExpense(expenseId: Int): ExpensePhoto? =
+        expenseDao.getPhotoForExpense(expenseId)
+
+    suspend fun deletePhoto(photo: ExpensePhoto) = expenseDao.deletePhoto(photo)
+
+    // Other methods as before...
+    fun getTotalIncome(userId: Int): Flow<Double?> = expenseDao.getTotalIncome(userId)
+    fun getTotalExpenses(userId: Int): Flow<Double?> = expenseDao.getTotalExpenses(userId)
+    fun getRecentExpenses(userId: Int, limit: Int = 5): Flow<List<Expense>> =
+        expenseDao.getRecentExpenses(userId, limit)
+
+    suspend fun getCategorySpendingTotals(
+        userId: Int, startDate: Date, endDate: Date
+    ): List<ExpenseDao.CategorySpendingSummary> =
+        expenseDao.getCategorySpendingTotals(userId, startDate, endDate)
 }

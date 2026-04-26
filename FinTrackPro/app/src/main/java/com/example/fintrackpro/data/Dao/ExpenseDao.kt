@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Delete
 import com.example.fintrackpro.data.entity.Expense
+import com.example.fintrackpro.data.entity.ExpensePhoto
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
@@ -72,4 +73,15 @@ interface ExpenseDao {
 
     @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId AND isIncome = 1")
     fun getTotalIncome(userId: Int): Flow<Double?>
+
+    // ExpensePhoto management
+    @Insert
+    suspend fun insertPhoto(photo: ExpensePhoto): Long
+
+    @Query("SELECT * FROM photos WHERE expenseId = :expenseId LIMIT 1")
+    suspend fun getPhotoForExpense(expenseId: Int): ExpensePhoto?
+
+    @Delete
+    suspend fun deletePhoto(photo: ExpensePhoto)
+
 }

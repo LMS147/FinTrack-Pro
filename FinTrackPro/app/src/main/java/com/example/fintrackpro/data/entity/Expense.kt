@@ -21,7 +21,7 @@ data class Expense(
     val description: String,
     val date: Date,                     // Date of transaction
 
-    val startTime: String? = null,      // Time string (HH:mm) - Requirement 3
+    val startTime: String? = null,      // Time string (HH:mm)
     val endTime: String? = null,        // Optional duration
 
     val isIncome: Boolean = false,      // Distinguish income vs expense
