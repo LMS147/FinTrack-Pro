@@ -20,4 +20,11 @@ class AuthRepository(private val userDao: UserDao) {
     suspend fun getUserByUsername(username: String): User? {
         return userDao.getUserByUsername(username)
     }
+    suspend fun getUserById(userId: Int): User? {
+        return userDao.getUserById(userId)
+    }
+
+    suspend fun updateUser(user: User) {
+        userDao.updateUser(user)
+    }
 }
