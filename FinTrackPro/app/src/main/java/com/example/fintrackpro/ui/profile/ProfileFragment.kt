@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.fintrackpro.R
 import com.example.fintrackpro.databinding.FragmentProfileBinding
 import com.example.fintrackpro.ui.auth.LoginActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -33,7 +34,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun setupListeners() {
         binding.llCurrency.setOnClickListener {
-            // Simple dialog to pick currency
             showCurrencyPicker()
         }
 
@@ -46,7 +46,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         binding.btnLogout.setOnClickListener {
-            // Clear session (optional SharedPrefs) and go to Login
+            // Clear session and go to Login
             startActivity(Intent(requireContext(), LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
@@ -80,8 +80,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun showCurrencyPicker() {
         val currencies = arrayOf("ZAR", "USD", "EUR")
-        val current = _uiState.value.user?.defaultCurrency ?: "ZAR"
-        val checkedItem = currencies.indexOf(current)
+        // Get current value from the ViewModel state
+        val current = viewModel.uiState.value.user?.defaultCurrency ?: "ZAR"
+        val checkedItem = currencies.indexOf(current).coerceAtLeast(0)
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Select Currency")

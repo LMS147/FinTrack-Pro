@@ -45,10 +45,15 @@
                     android:orientation="vertical">
 
                     <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         style="@style/TextAppearance.Material3.BodySmall"
                         android:text="@string/min_goal" />
                     <TextView
                         android:id="@+id/tvMinGoal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         style="@style/TextAppearance.Material3.TitleMedium"
                         android:textStyle="bold"
                         tools:text="R 1,000" />
@@ -61,10 +66,14 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         style="@style/TextAppearance.Material3.BodySmall"
                         android:text="@string/max_goal" />
                     <TextView
                         android:id="@+id/tvMaxGoal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         style="@style/TextAppearance.Material3.TitleMedium"
                         android:textStyle="bold"
                         tools:text="R 4,000" />
@@ -74,6 +83,8 @@
             <!-- Spending progress -->
             <TextView
                 android:id="@+id/tvSpendingLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/text_secondary"
@@ -88,11 +99,13 @@
                 android:max="100"
                 android:progress="0"
                 app:trackColor="@color/background_light"
-                app:progressTint="@color/primary_blue" />
+                android:progressTint="@color/primary_blue" />
 
             <!-- Percentage text -->
             <TextView
                 android:id="@+id/tvPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/TextAppearance.Material3.LabelSmall"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/text_secondary"
