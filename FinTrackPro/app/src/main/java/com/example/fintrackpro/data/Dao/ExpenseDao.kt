@@ -21,7 +21,7 @@ interface ExpenseDao {
     @Delete
     suspend fun deleteExpense(expense: Expense)
 
-    // Requirement 6: View expenses with user-selectable date range
+    // View expenses with user-selectable date range
     @Query("""
         SELECT * FROM expenses 
         WHERE userId = :userId AND date BETWEEN :startDate AND :endDate 
@@ -33,7 +33,7 @@ interface ExpenseDao {
         endDate: Date
     ): Flow<List<Expense>>
 
-    // Requirement 7: Total spending per category within a date range
+    //Total spending per category within a date range
     @Query("""
         SELECT c.name, SUM(e.amount) as total 
         FROM expenses e 
@@ -47,6 +47,15 @@ interface ExpenseDao {
         startDate: Date,
         endDate: Date
     ): List<CategorySpendingSummary>
+
+    // order
+    @Query("""
+        SELECT * FROM expenses 
+        WHERE userId = :userId 
+        ORDER BY date DESC, createdAt DESC 
+        LIMIT :limit
+    """)
+    fun getRecentExpenses(userId: Int, limit: Int = 5): Flow<List<Expense>>
 
     // Data class for the query result above
     data class CategorySpendingSummary(

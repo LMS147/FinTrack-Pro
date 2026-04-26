@@ -18,4 +18,16 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
     suspend fun getCategoryTotals(userId: Int, startDate: Date, endDate: Date): List<ExpenseDao.CategorySpendingSummary> {
         return expenseDao.getCategorySpendingTotals(userId, startDate, endDate)
     }
+
+    fun getTotalIncome(userId: Int): Flow<Double?> {
+        return expenseDao.getTotalIncome(userId)
+    }
+
+    fun getTotalExpenses(userId: Int): Flow<Double?> {
+        return expenseDao.getTotalExpenses(userId)
+    }
+
+    fun getRecentExpenses(userId: Int, limit: Int = 5): Flow<List<Expense>> {
+        return expenseDao.getRecentExpenses(userId, limit)
+    }
 }
