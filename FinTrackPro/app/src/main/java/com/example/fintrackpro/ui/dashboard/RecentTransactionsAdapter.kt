@@ -10,7 +10,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class RecentTransactionsAdapter(
-    private val transactions: List<Expense>
+    private val transactions: List<Expense>,
+    private val currencyCode: String = "ZAR"
 ) : RecyclerView.Adapter<RecentTransactionsAdapter.TransactionViewHolder>() {
 
     inner class TransactionViewHolder(
@@ -20,7 +21,7 @@ class RecentTransactionsAdapter(
         fun bind(expense: Expense) {
             binding.tvDescription.text = expense.description
             binding.tvCategory.text = expense.categoryId.toString() // Replace with category name if joined
-            binding.tvAmount.text = CurrencyFormatter.format(expense.amount, "ZAR")
+            binding.tvAmount.text = CurrencyFormatter.format(expense.amount, currencyCode)
             binding.tvDate.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(expense.date)
 
             // Income/Expense color

@@ -61,13 +61,14 @@ class BudgetFragment : Fragment(R.layout.fragment_budget) {
 
         val budget = state.budget
         val totalSpent = state.totalSpent
+        val currency = state.currency
 
         if (budget != null) {
-            binding.tvMinGoal.text = CurrencyFormatter.format(budget.minSpendingGoal ?: 0.0, "ZAR")
-            binding.tvMaxGoal.text = CurrencyFormatter.format(budget.maxSpendingGoal, "ZAR")
+            binding.tvMinGoal.text = CurrencyFormatter.format(budget.minSpendingGoal ?: 0.0, currency)
+            binding.tvMaxGoal.text = CurrencyFormatter.format(budget.maxSpendingGoal, currency)
 
             // Spending progress
-            binding.tvSpendingLabel.text = "Spent: ${CurrencyFormatter.format(totalSpent, "ZAR")} of ${CurrencyFormatter.format(budget.maxSpendingGoal, "ZAR")}"
+            binding.tvSpendingLabel.text = "Spent: ${CurrencyFormatter.format(totalSpent, currency)} of ${CurrencyFormatter.format(budget.maxSpendingGoal, currency)}"
 
             val percent = if (budget.maxSpendingGoal > 0) (totalSpent / budget.maxSpendingGoal * 100).toInt().coerceIn(0, 100) else 0
             binding.progressBar.progress = percent

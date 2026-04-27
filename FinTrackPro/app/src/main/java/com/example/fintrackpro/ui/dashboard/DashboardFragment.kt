@@ -85,10 +85,12 @@ class DashboardFragment : Fragment() {
             return
         }
 
+        val currency = state.currency
+
         // Update summary cards
-        binding.tvBalance.text = CurrencyFormatter.format(state.totalBalance, "ZAR")
-        binding.tvIncome.text = CurrencyFormatter.format(state.totalIncome, "ZAR")
-        binding.tvExpenses.text = CurrencyFormatter.format(state.totalExpenses, "ZAR")
+        binding.tvBalance.text = CurrencyFormatter.format(state.totalBalance, currency)
+        binding.tvIncome.text = CurrencyFormatter.format(state.totalIncome, currency)
+        binding.tvExpenses.text = CurrencyFormatter.format(state.totalExpenses, currency)
 
         // Update recent transactions
         if (state.recentTransactions.isEmpty()) {
@@ -96,7 +98,7 @@ class DashboardFragment : Fragment() {
             binding.rvRecentTransactions.adapter = null
         } else {
             binding.tvEmptyState.visibility = View.GONE
-            binding.rvRecentTransactions.adapter = RecentTransactionsAdapter(state.recentTransactions)
+            binding.rvRecentTransactions.adapter = RecentTransactionsAdapter(state.recentTransactions, currency)
         }
     }
 

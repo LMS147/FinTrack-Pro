@@ -2,6 +2,7 @@ package com.example.fintrackpro.data.Repository
 
 import com.example.fintrackpro.data.Dao.UserDao
 import com.example.fintrackpro.data.entity.User
+import kotlinx.coroutines.flow.Flow
 
 class AuthRepository(private val userDao: UserDao) {
 
@@ -22,6 +23,10 @@ class AuthRepository(private val userDao: UserDao) {
     }
     suspend fun getUserById(userId: Int): User? {
         return userDao.getUserById(userId)
+    }
+
+    fun getUserFlow(userId: Int): Flow<User?> {
+        return userDao.getUserByIdFlow(userId)
     }
 
     suspend fun updateUser(user: User) {

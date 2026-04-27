@@ -57,7 +57,7 @@ class ExpenseFragment : Fragment(R.layout.fragment_expense) {
                         // show error
                         return@collect
                     }
-                    binding.rvExpenses.adapter = ExpenseAdapter(state.expenses) { expense ->
+                    binding.rvExpenses.adapter = ExpenseAdapter(state.expenses, state.currency) { expense ->
                         // Navigate to detail
                         val intent = Intent(requireContext(), ExpenseDetailActivity::class.java).apply {
                             putExtra("expenseId", expense.expenseId)

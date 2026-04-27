@@ -1,8 +1,12 @@
 package com.example.fintrackpro.ui.profile
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -24,6 +28,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         ProfileViewModelFactory(requireContext(), userId)
     }
 
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            viewModel.updateProfilePicture(it.toString())
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
@@ -33,6 +43,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun setupListeners() {
+        binding.ivAvatar.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
         binding.llCurrency.setOnClickListener {
             showCurrencyPicker()
         }
@@ -54,7 +68,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         binding.llEditProfile.setOnClickListener {
-            // Future: open EditProfileActivity
+            showEditProfileDialog()
         }
 
         binding.llChangePassword.setOnClickListener {
@@ -73,9 +87,43 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     binding.tvCurrency.text = user.defaultCurrency ?: "ZAR"
                     binding.switchNotifications.isChecked = user.notificationsEnabled
                     binding.switchBiometrics.isChecked = user.biometricsEnabled
+
+                    user.photoUrl?.let {
+                        binding.ivAvatar.setImageURI(Uri.parse(it))
+                    }
                 }
             }
         }
+    }
+
+    private fun showEditProfileDialog() {
+        val user = viewModel.uiState.value.user ?: return
+        
+        val layout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 0)
+        }
+
+        val etName = EditText(requireContext()).apply {
+            hint = "Display Name"
+            setText(user.displayName ?: user.username)
+        }
+        val etEmail = EditText(requireContext()).apply {
+            hint = "Email"
+            setText(user.email)
+        }
+
+        layout.addView(etName)
+        layout.addView(etEmail)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Edit Profile")
+            .setView(layout)
+            .setPositiveButton("Save") { _, _ ->
+                viewModel.updateProfile(etName.text.toString(), etEmail.text.toString())
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun showCurrencyPicker() {

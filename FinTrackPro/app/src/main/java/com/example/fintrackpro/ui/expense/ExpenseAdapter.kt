@@ -11,6 +11,7 @@ import java.util.Locale
 
 class ExpenseAdapter(
     private val expenses: List<Expense>,
+    private val currencyCode: String = "ZAR",
     private val onItemClick: (Expense) -> Unit
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
@@ -19,7 +20,7 @@ class ExpenseAdapter(
 
         fun bind(expense: Expense) {
             binding.tvDescription.text = expense.description
-            binding.tvAmount.text = CurrencyFormatter.format(expense.amount, "ZAR")
+            binding.tvAmount.text = CurrencyFormatter.format(expense.amount, currencyCode)
             binding.tvDate.text = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(expense.date)
             binding.tvCategory.text = "Category " + expense.categoryId // replace with name if needed
             binding.ivPhoto.visibility = android.view.View.GONE // set later if photo exists

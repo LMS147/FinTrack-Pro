@@ -71,7 +71,8 @@ class ReportsFragment : Fragment(R.layout.fragment_reports) {
                     // Update breakdown list
                     binding.rvCategoryBreakdown.adapter = CategoryBreakdownAdapter(
                         state.categoryTotals,
-                        state.totalSpent
+                        state.totalSpent,
+                        state.currency
                     )
 
                     // Update date button texts

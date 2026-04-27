@@ -38,6 +38,24 @@ class ProfileViewModel(
         }
     }
 
+    fun updateProfile(displayName: String, email: String) {
+        viewModelScope.launch {
+            val currentUser = _uiState.value.user ?: return@launch
+            val updated = currentUser.copy(displayName = displayName, email = email)
+            authRepository.updateUser(updated)
+            _uiState.update { it.copy(user = updated) }
+        }
+    }
+
+    fun updateProfilePicture(uri: String) {
+        viewModelScope.launch {
+            val currentUser = _uiState.value.user ?: return@launch
+            val updated = currentUser.copy(photoUrl = uri)
+            authRepository.updateUser(updated)
+            _uiState.update { it.copy(user = updated) }
+        }
+    }
+
     fun toggleNotifications(enabled: Boolean) {
         viewModelScope.launch {
             val currentUser = _uiState.value.user ?: return@launch

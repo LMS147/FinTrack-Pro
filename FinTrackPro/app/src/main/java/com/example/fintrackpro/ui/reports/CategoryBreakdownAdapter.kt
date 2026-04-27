@@ -9,7 +9,8 @@ import com.example.fintrackpro.utils.CurrencyFormatter
 
 class CategoryBreakdownAdapter(
     private val items: List<CategorySpendingSummary>,
-    private val totalSpent: Double
+    private val totalSpent: Double,
+    private val currencyCode: String = "ZAR"
 ) : RecyclerView.Adapter<CategoryBreakdownAdapter.ViewHolder>() {
 
     private val colors = listOf(
@@ -26,7 +27,7 @@ class CategoryBreakdownAdapter(
 
         fun bind(item: CategorySpendingSummary, position: Int) {
             binding.tvCategoryName.text = item.name
-            binding.tvCategoryAmount.text = CurrencyFormatter.format(item.total, "ZAR")
+            binding.tvCategoryAmount.text = CurrencyFormatter.format(item.total, currencyCode)
             val percent = if (totalSpent > 0) (item.total / totalSpent * 100).toInt() else 0
             binding.tvCategoryPercentage.text = "$percent%"
             val colorRes = colors[position % colors.size]

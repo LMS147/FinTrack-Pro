@@ -2,12 +2,14 @@ package com.example.fintrackpro.ui.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fintrackpro.data.Repository.AuthRepository
 import com.example.fintrackpro.data.Repository.ExpenseRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val expenseRepository: ExpenseRepository,
+    private val authRepository: AuthRepository,
     private val userId: Int  // Obtain from logged-in user session
 ) : ViewModel() {
 
@@ -20,12 +22,13 @@ class DashboardViewModel(
 
     private fun loadDashboardData() {
         viewModelScope.launch {
-            // Combine the flows of income, expenses, and recent transactions
+            // Combine the flows of income, expenses, recent transactions, and user (for currency)
             combine(
                 expenseRepository.getTotalIncome(userId),
                 expenseRepository.getTotalExpenses(userId),
-                expenseRepository.getRecentExpenses(userId)
-            ) { income, expenses, transactions ->
+                expenseRepository.getRecentExpenses(userId),
+                authRepository.getUserFlow(userId)
+            ) { income, expenses, transactions, user ->
                 val incomeValue = income ?: 0.0
                 val expenseValue = expenses ?: 0.0
                 DashboardUiState(
@@ -33,6 +36,7 @@ class DashboardViewModel(
                     totalIncome = incomeValue,
                     totalExpenses = expenseValue,
                     recentTransactions = transactions,
+                    currency = user?.defaultCurrency ?: "ZAR",
                     isLoading = false
                 )
             }.catch { e ->

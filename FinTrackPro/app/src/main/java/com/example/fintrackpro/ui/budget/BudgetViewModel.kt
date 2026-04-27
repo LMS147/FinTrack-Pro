@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fintrackpro.data.entity.Budget
+import com.example.fintrackpro.data.Repository.AuthRepository
 import com.example.fintrackpro.data.Repository.BudgetRepository
 import com.example.fintrackpro.data.Repository.ExpenseRepository
 import kotlinx.coroutines.flow.*
@@ -14,6 +15,7 @@ import java.util.*
 class BudgetViewModel(
     private val budgetRepository: BudgetRepository,
     private val expenseRepository: ExpenseRepository,
+    private val authRepository: AuthRepository,
     private val userId: Int
 ) : ViewModel() {
 
@@ -33,18 +35,22 @@ class BudgetViewModel(
             // Get date range for spending
             val (startDate, endDate) = getMonthDateRange()
             
-            // Observe budget and spending changes
-            budgetRepository.observeBudgetForMonth(userId, monthYear)
-                .combine(expenseRepository.observeTotalExpensesForPeriod(userId, startDate, endDate)) { budget, totalSpent ->
-                    BudgetUiState(
-                        budget = budget,
-                        totalSpent = totalSpent,
-                        monthYear = monthYear,
-                        isLoading = false
-                    )
-                }.collect { state ->
-                    _uiState.value = state
-                }
+            // Observe budget, spending, and user changes
+            combine(
+                budgetRepository.observeBudgetForMonth(userId, monthYear),
+                expenseRepository.observeTotalExpensesForPeriod(userId, startDate, endDate),
+                authRepository.getUserFlow(userId)
+            ) { budget, totalSpent, user ->
+                BudgetUiState(
+                    budget = budget,
+                    totalSpent = totalSpent,
+                    monthYear = monthYear,
+                    currency = user?.defaultCurrency ?: "ZAR",
+                    isLoading = false
+                )
+            }.collect { state ->
+                _uiState.value = state
+            }
         }
     }
 
@@ -80,6 +86,7 @@ class BudgetViewModel(
         val budget: Budget? = null,
         val totalSpent: Double = 0.0,
         val monthYear: String = "",
+        val currency: String = "ZAR",
         val isLoading: Boolean = true
     )
 }

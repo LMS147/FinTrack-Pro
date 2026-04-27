@@ -3,6 +3,7 @@ package com.example.fintrackpro.ui.reports
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fintrackpro.data.Dao.ExpenseDao.CategorySpendingSummary
+import com.example.fintrackpro.data.Repository.AuthRepository
 import com.example.fintrackpro.data.Repository.ExpenseRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -10,6 +11,7 @@ import java.util.*
 
 class ReportsViewModel(
     private val expenseRepository: ExpenseRepository,
+    private val authRepository: AuthRepository,
     private val userId: Int
 ) : ViewModel() {
 
@@ -44,28 +46,30 @@ class ReportsViewModel(
 
     private fun observeReport() {
         viewModelScope.launch {
-            combine(_startDate, _endDate) { start, end -> Pair(start, end) }
-                .flatMapLatest { (start, end) ->
-                    expenseRepository.getCategorySpendingTotals(userId, start, end)
-                        .map { totals ->
-                            ReportsUiState(
-                                categoryTotals = totals,
-                                totalSpent = totals.sumOf { it.total },
-                                startDate = start,
-                                endDate = end,
-                                isLoading = false
-                            )
-                        }
-                }
-                .catch { e ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = e.message
-                    )
-                }
-                .collect { state ->
-                    _uiState.value = state
-                }
+            combine(
+                combine(_startDate, _endDate) { start, end -> Pair(start, end) }
+                    .flatMapLatest { (start, end) ->
+                        expenseRepository.getCategorySpendingTotals(userId, start, end)
+                            .map { Triple(it, start, end) }
+                    },
+                authRepository.getUserFlow(userId)
+            ) { (totals, start, end), user ->
+                ReportsUiState(
+                    categoryTotals = totals,
+                    totalSpent = totals.sumOf { it.total },
+                    startDate = start,
+                    endDate = end,
+                    currency = user?.defaultCurrency ?: "ZAR",
+                    isLoading = false
+                )
+            }.catch { e ->
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = e.message
+                )
+            }.collect { state ->
+                _uiState.value = state
+            }
         }
     }
 
@@ -83,6 +87,7 @@ class ReportsViewModel(
         val totalSpent: Double = 0.0,
         val startDate: Date? = null,
         val endDate: Date? = null,
+        val currency: String = "ZAR",
         val isLoading: Boolean = false,
         val error: String? = null
     )

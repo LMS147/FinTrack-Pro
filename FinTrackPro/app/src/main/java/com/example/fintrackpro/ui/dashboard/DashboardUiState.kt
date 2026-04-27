@@ -5,6 +5,7 @@ data class DashboardUiState(
     val totalIncome: Double = 0.0,
     val totalExpenses: Double = 0.0,
     val recentTransactions: List<com.example.fintrackpro.data.entity.Expense> = emptyList(),
+    val currency: String = "ZAR",
     val isLoading: Boolean = true,
     val errorMessage: String? = null
 )

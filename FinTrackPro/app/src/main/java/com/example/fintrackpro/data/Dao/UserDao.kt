@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.fintrackpro.data.entity.User
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
@@ -24,6 +25,9 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE userId = :userId")
     suspend fun getUserById(userId: Int): User?
+
+    @Query("SELECT * FROM users WHERE userId = :userId")
+    fun getUserByIdFlow(userId: Int): Flow<User?>
 
     @Query("UPDATE users SET lastLoginAt = :timestamp WHERE userId = :userId")
     suspend fun updateLastLogin(userId: Int, timestamp: Long)

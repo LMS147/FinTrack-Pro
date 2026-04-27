@@ -3,6 +3,7 @@ package com.example.fintrackpro.ui.expense
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fintrackpro.data.entity.Expense
+import com.example.fintrackpro.data.Repository.AuthRepository
 import com.example.fintrackpro.data.Repository.ExpenseRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -10,6 +11,7 @@ import java.util.*
 
 class ExpenseViewModel(
     private val repository: ExpenseRepository,
+    private val authRepository: AuthRepository,
     private val userId: Int
 ) : ViewModel() {
 
@@ -25,22 +27,24 @@ class ExpenseViewModel(
     }
 
     private fun observeExpenses() {
-        // Combine start/end dates and fetch expenses
+        // Combine start/end dates, expenses flow, and user flow
         viewModelScope.launch {
-            combine(_startDate, _endDate) { start, end -> Pair(start, end) }
-                .flatMapLatest { (start, end) ->
-                    repository.getExpensesForPeriod(userId, start, end)
-                }
-                .catch { e ->
-                    _uiState.value = _uiState.value.copy(error = e.message)
-                }
-                .collect { expenses ->
-                    _uiState.value = _uiState.value.copy(
-                        expenses = expenses,
-                        isLoading = false,
-                        error = null
-                    )
-                }
+            combine(
+                combine(_startDate, _endDate) { start, end -> Pair(start, end) }
+                    .flatMapLatest { (start, end) ->
+                        repository.getExpensesForPeriod(userId, start, end)
+                    },
+                authRepository.getUserFlow(userId)
+            ) { expenses, user ->
+                _uiState.value = _uiState.value.copy(
+                    expenses = expenses,
+                    currency = user?.defaultCurrency ?: "ZAR",
+                    isLoading = false,
+                    error = null
+                )
+            }.catch { e ->
+                _uiState.value = _uiState.value.copy(error = e.message)
+            }.collect()
         }
     }
 
@@ -86,6 +90,7 @@ class ExpenseViewModel(
 
     data class ExpenseUiState(
         val expenses: List<Expense> = emptyList(),
+        val currency: String = "ZAR",
         val isLoading: Boolean = true,
         val error: String? = null
     )

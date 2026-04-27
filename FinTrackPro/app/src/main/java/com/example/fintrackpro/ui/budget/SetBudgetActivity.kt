@@ -13,17 +13,29 @@ class SetBudgetActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySetBudgetBinding
     private val scope = CoroutineScope(Dispatchers.Main + Job())
     private val userId = 1
+    private var currentCurrency: String = "ZAR"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySetBudgetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Load user settings
+        scope.launch {
+            val db = com.example.fintrackpro.data.FinTrackDatabase.getDatabase(this@SetBudgetActivity)
+            val user = db.userDao().getUserById(userId)
+            currentCurrency = user?.defaultCurrency ?: "ZAR"
+            
+            // Initial text update
+            binding.tvMinValue.text = CurrencyFormatter.format(binding.seekBarMin.progress.toDouble(), currentCurrency)
+            binding.tvMaxValue.text = CurrencyFormatter.format(binding.seekBarMax.progress.toDouble(), currentCurrency)
+        }
+
         // Setup SeekBars
         binding.seekBarMin.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val amount = progress.toDouble()
-                binding.tvMinValue.text = CurrencyFormatter.format(amount, "ZAR")
+                binding.tvMinValue.text = CurrencyFormatter.format(amount, currentCurrency)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -32,7 +44,7 @@ class SetBudgetActivity : AppCompatActivity() {
         binding.seekBarMax.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val amount = progress.toDouble()
-                binding.tvMaxValue.text = CurrencyFormatter.format(amount, "ZAR")
+                binding.tvMaxValue.text = CurrencyFormatter.format(amount, currentCurrency)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
