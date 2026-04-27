@@ -1,11 +1,27 @@
 package com.example.fintrackpro.data.Repository
 
+import com.example.fintrackpro.R
 import com.example.fintrackpro.data.Dao.CategoryDao
 import com.example.fintrackpro.data.entity.Category
 import kotlinx.coroutines.flow.Flow
 
 
 class CategoryRepository(private val categoryDao: CategoryDao) {
+
+    suspend fun insertDefaultCategories(userId: Int) {
+        val existing = categoryDao.getCategoryListOnce(userId)
+        if (existing.isEmpty()) {
+            val defaults = listOf(
+                Category(userId = userId, name = "Food", isDefault = true, iconResId = R.drawable.ic_camera),   // use any icon, or 0
+                Category(userId = userId, name = "Transport", isDefault = true),
+                Category(userId = userId, name = "Entertainment", isDefault = true),
+                Category(userId = userId, name = "Bills", isDefault = true),
+                Category(userId = userId, name = "Shopping", isDefault = true),
+                Category(userId = userId, name = "Other", isDefault = true)
+            )
+            defaults.forEach { categoryDao.insertCategory(it) }
+        }
+    }
 
     suspend fun createCategory(category: Category): Long {
         return categoryDao.insertCategory(category)

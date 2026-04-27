@@ -12,10 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fintrackpro.databinding.FragmentDashboardBinding
-import com.example.fintrackpro.ui.dashboard.RecentTransactionsAdapter
 import com.example.fintrackpro.ui.expense.AddExpenseActivity
 import com.example.fintrackpro.utils.CurrencyFormatter
 import kotlinx.coroutines.launch
+import com.example.fintrackpro.data.Repository.CategoryRepository
 
 class DashboardFragment : Fragment() {
 
@@ -44,6 +44,13 @@ class DashboardFragment : Fragment() {
         setupRecyclerView()
         setupFab()
         observeUiState()
+
+        // Initialize repository to insert default categories
+        val database = com.example.fintrackpro.data.FinTrackDatabase.getDatabase(requireContext())
+        val categoryRepository = CategoryRepository(database.categoryDao())
+        viewLifecycleOwner.lifecycleScope.launch {
+            categoryRepository.insertDefaultCategories(userId)
+        }
     }
 
     private fun setupRecyclerView() {

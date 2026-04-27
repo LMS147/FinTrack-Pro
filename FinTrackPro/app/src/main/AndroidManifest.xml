@@ -28,6 +28,10 @@
             android:exported="false" >
         </activity>
 
+        <activity android:name=".ui.expense.AddExpenseActivity" android:exported="false" />
+        <activity android:name=".ui.expense.ExpenseDetailActivity" android:exported="false" />
+        <activity android:name=".ui.budget.SetBudgetActivity" android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
