@@ -3,7 +3,7 @@ package com.example.fintrackpro.data.Repository
 import com.example.fintrackpro.data.Dao.ExpenseDao
 import com.example.fintrackpro.data.entity.Expense
 import com.example.fintrackpro.data.entity.ExpensePhoto
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import java.util.Date
 
 class ExpenseRepository(private val expenseDao: ExpenseDao) {
@@ -36,8 +36,12 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         return expenseDao.getTotalExpensesForPeriod(userId, startDate, endDate) ?: 0.0
     }
 
-    suspend fun getCategorySpendingTotals(
+    fun observeTotalExpensesForPeriod(userId: Int, startDate: Date, endDate: Date): Flow<Double> {
+        return expenseDao.observeTotalExpensesForPeriod(userId, startDate, endDate).map { it ?: 0.0 }
+    }
+
+    fun getCategorySpendingTotals(
         userId: Int, startDate: Date, endDate: Date
-    ): List<ExpenseDao.CategorySpendingSummary> =
+    ): Flow<List<ExpenseDao.CategorySpendingSummary>> =
         expenseDao.getCategorySpendingTotals(userId, startDate, endDate)
 }

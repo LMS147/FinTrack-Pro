@@ -33,9 +33,9 @@ class BudgetViewModel(
             // Get date range for spending
             val (startDate, endDate) = getMonthDateRange()
             
-            // Observe budget changes
+            // Observe budget and spending changes
             budgetRepository.observeBudgetForMonth(userId, monthYear)
-                .combine(flow { emit(expenseRepository.getTotalExpensesForPeriod(userId, startDate, endDate)) }) { budget, totalSpent ->
+                .combine(expenseRepository.observeTotalExpensesForPeriod(userId, startDate, endDate)) { budget, totalSpent ->
                     BudgetUiState(
                         budget = budget,
                         totalSpent = totalSpent,

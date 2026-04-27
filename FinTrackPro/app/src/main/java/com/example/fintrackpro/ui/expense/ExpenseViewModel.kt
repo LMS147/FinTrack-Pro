@@ -49,6 +49,12 @@ class ExpenseViewModel(
         _endDate.value = endDate
     }
 
+    fun refresh() {
+        // Only auto-update if it was set to default (today)
+        // For simplicity, always update the end date to catch new entries if it's near 'now'
+        _endDate.value = getDefaultEndDate()
+    }
+
     fun deleteExpense(expense: Expense) {
         viewModelScope.launch {
             try {
@@ -69,7 +75,14 @@ class ExpenseViewModel(
         return cal.time
     }
 
-    private fun getDefaultEndDate(): Date = Calendar.getInstance().time
+    private fun getDefaultEndDate(): Date {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        cal.set(Calendar.MILLISECOND, 999)
+        return cal.time
+    }
 
     data class ExpenseUiState(
         val expenses: List<Expense> = emptyList(),

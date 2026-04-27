@@ -82,6 +82,11 @@ class ExpenseFragment : Fragment(R.layout.fragment_expense) {
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refresh()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

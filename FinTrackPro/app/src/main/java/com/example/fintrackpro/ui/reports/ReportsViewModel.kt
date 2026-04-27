@@ -16,41 +16,56 @@ class ReportsViewModel(
     private val _uiState = MutableStateFlow(ReportsUiState())
     val uiState: StateFlow<ReportsUiState> = _uiState.asStateFlow()
 
-    private var startDate: Date = getDefaultStartDate()
-    private var endDate: Date = Calendar.getInstance().time
+    private val _startDate = MutableStateFlow(getDefaultStartDate())
+    private val _endDate = MutableStateFlow(getDefaultEndDate())
 
     init {
-        loadReport()
+        observeReport()
     }
 
     fun setDateRange(start: Date, end: Date) {
-        startDate = start
-        endDate = end
-        loadReport()
+        _startDate.value = start
+        _endDate.value = end
     }
 
     fun refresh() {
-        loadReport()
+        // Update end date to end of today to catch new entries
+        _endDate.value = getDefaultEndDate()
     }
 
-    private fun loadReport() {
+    private fun getDefaultEndDate(): Date {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        cal.set(Calendar.MILLISECOND, 999)
+        return cal.time
+    }
+
+    private fun observeReport() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            try {
-                val totals = expenseRepository.getCategorySpendingTotals(userId, startDate, endDate)
-                _uiState.value = ReportsUiState(
-                    categoryTotals = totals,
-                    totalSpent = totals.sumOf { it.total },
-                    startDate = startDate,
-                    endDate = endDate,
-                    isLoading = false
-                )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = e.message
-                )
-            }
+            combine(_startDate, _endDate) { start, end -> Pair(start, end) }
+                .flatMapLatest { (start, end) ->
+                    expenseRepository.getCategorySpendingTotals(userId, start, end)
+                        .map { totals ->
+                            ReportsUiState(
+                                categoryTotals = totals,
+                                totalSpent = totals.sumOf { it.total },
+                                startDate = start,
+                                endDate = end,
+                                isLoading = false
+                            )
+                        }
+                }
+                .catch { e ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = e.message
+                    )
+                }
+                .collect { state ->
+                    _uiState.value = state
+                }
         }
     }
 

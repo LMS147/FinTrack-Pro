@@ -43,11 +43,11 @@ interface ExpenseDao {
         GROUP BY e.categoryId 
         ORDER BY total DESC
     """)
-    suspend fun getCategorySpendingTotals(
+    fun getCategorySpendingTotals(
         userId: Int,
         startDate: Date,
         endDate: Date
-    ): List<CategorySpendingSummary>
+    ): Flow<List<CategorySpendingSummary>>
 
     // order
     @Query("""
@@ -76,6 +76,9 @@ interface ExpenseDao {
 
     @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId AND date BETWEEN :startDate AND :endDate AND isIncome = 0")
     suspend fun getTotalExpensesForPeriod(userId: Int, startDate: Date, endDate: Date): Double?
+
+    @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId AND date BETWEEN :startDate AND :endDate AND isIncome = 0")
+    fun observeTotalExpensesForPeriod(userId: Int, startDate: Date, endDate: Date): Flow<Double?>
 
     // ExpensePhoto management
     @Insert
