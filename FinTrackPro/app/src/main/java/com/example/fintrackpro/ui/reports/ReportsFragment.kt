@@ -82,6 +82,11 @@ class ReportsFragment : Fragment(R.layout.fragment_reports) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refresh()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -29,6 +29,10 @@ class ReportsViewModel(
         loadReport()
     }
 
+    fun refresh() {
+        loadReport()
+    }
+
     private fun loadReport() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)

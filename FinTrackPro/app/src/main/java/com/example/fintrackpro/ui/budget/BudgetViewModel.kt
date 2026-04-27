@@ -23,30 +23,34 @@ class BudgetViewModel(
     private val monthYear: String = getCurrentMonthYear()
 
     init {
-        loadBudgetAndSpending()
+        observeData()
     }
 
-    private fun loadBudgetAndSpending() {
+    private fun observeData() {
         viewModelScope.launch {
-            // Get budget for the month
-            val budget = budgetRepository.getBudgetForMonth(userId, monthYear)
-            // Get total spending for the month
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            
+            // Get date range for spending
             val (startDate, endDate) = getMonthDateRange()
-            val totalSpent = expenseRepository.getTotalExpensesForPeriod(userId, startDate, endDate)
-
-            _uiState.value = BudgetUiState(
-                budget = budget,
-                totalSpent = totalSpent,
-                monthYear = monthYear,
-                isLoading = false
-            )
+            
+            // Observe budget changes
+            budgetRepository.observeBudgetForMonth(userId, monthYear)
+                .combine(flow { emit(expenseRepository.getTotalExpensesForPeriod(userId, startDate, endDate)) }) { budget, totalSpent ->
+                    BudgetUiState(
+                        budget = budget,
+                        totalSpent = totalSpent,
+                        monthYear = monthYear,
+                        isLoading = false
+                    )
+                }.collect { state ->
+                    _uiState.value = state
+                }
         }
     }
 
     fun saveBudget(min: Double, max: Double) {
         viewModelScope.launch {
             budgetRepository.upsertBudget(userId, monthYear, min, max)
-            loadBudgetAndSpending()  // Refresh display
         }
     }
 

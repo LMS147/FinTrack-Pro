@@ -29,9 +29,9 @@
             android:orientation="horizontal">
 
             <TextView
-                style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 android:text="Period:" />
 
             <com.google.android.material.button.MaterialButton
@@ -43,9 +43,9 @@
                 app:icon="@drawable/ic_calendar" />
 
             <TextView
-                style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_marginHorizontal="8dp"
                 android:text="—" />
 

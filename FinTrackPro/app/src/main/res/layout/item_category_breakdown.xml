@@ -17,19 +17,24 @@
 
     <TextView
         android:id="@+id/tvCategoryName"
-        style="@style/TextAppearance.Material3.BodyMedium"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.Material3.BodyMedium"
         android:layout_weight="1"
         tools:text="Food" />
 
     <TextView
         android:id="@+id/tvCategoryAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         style="@style/TextAppearance.Material3.BodyMedium"
         android:textStyle="bold"
         tools:text="R 2,350.00" />
 
     <TextView
         android:id="@+id/tvCategoryPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         style="@style/TextAppearance.Material3.LabelSmall"
         android:layout_marginStart="8dp"
         android:textColor="@color/text_secondary"
