@@ -15,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.fintrackpro.R
 import com.example.fintrackpro.databinding.FragmentProfileBinding
 import com.example.fintrackpro.ui.auth.LoginActivity
+import com.example.fintrackpro.utils.PhotoHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -30,7 +31,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            viewModel.updateProfilePicture(it.toString())
+            val localUri = PhotoHelper.saveImageToInternalStorage(requireContext(), it)
+            if (localUri != null) {
+                viewModel.updateProfilePicture(localUri)
+            }
         }
     }
 
@@ -89,7 +93,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     binding.switchBiometrics.isChecked = user.biometricsEnabled
 
                     user.photoUrl?.let {
-                        binding.ivAvatar.setImageURI(Uri.parse(it))
+                        try {
+                            binding.ivAvatar.setImageURI(Uri.parse(it))
+                        } catch (e: SecurityException) {
+                            // If we still get a security exception, fallback to default
+                            binding.ivAvatar.setImageResource(R.drawable.ic_profile)
+                        }
+                    } ?: run {
+                        binding.ivAvatar.setImageResource(R.drawable.ic_profile)
                     }
                 }
             }

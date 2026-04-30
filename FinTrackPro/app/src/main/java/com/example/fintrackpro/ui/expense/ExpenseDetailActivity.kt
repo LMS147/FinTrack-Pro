@@ -29,18 +29,25 @@ class ExpenseDetailActivity : AppCompatActivity() {
 
         scope.launch {
             val expense = repo.getExpenseById(expenseId)
-            expense?.let { displayExpense(it) }
+            val user = db.userDao().getUserById(expense?.userId ?: 1)
+            val currency = user?.defaultCurrency ?: "ZAR"
+            
+            expense?.let { displayExpense(it, currency) }
             val photo = repo.getPhotoForExpense(expenseId)
             if (photo != null) {
-                binding.ivPhoto.setImageURI(photo.photoUri)
-                binding.ivPhoto.visibility = android.view.View.VISIBLE
+                try {
+                    binding.ivPhoto.setImageURI(photo.photoUri)
+                    binding.ivPhoto.visibility = android.view.View.VISIBLE
+                } catch (e: SecurityException) {
+                    binding.ivPhoto.visibility = android.view.View.GONE
+                }
             }
         }
     }
 
-    private fun displayExpense(expense: Expense) {
+    private fun displayExpense(expense: Expense, currency: String) {
         binding.tvDescription.text = expense.description
-        binding.tvAmount.text = CurrencyFormatter.format(expense.amount, "ZAR")
+        binding.tvAmount.text = CurrencyFormatter.format(expense.amount, currency)
         binding.tvDate.text = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(expense.date)
         binding.tvStartTime.text = expense.startTime ?: "N/A"
         binding.tvEndTime.text = expense.endTime ?: "N/A"

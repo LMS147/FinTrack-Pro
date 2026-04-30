@@ -154,8 +154,18 @@ class AddExpenseActivity : AppCompatActivity() {
                 isIncome = binding.chipIncome.isChecked
             )
             lifecycleScope.launch {
+                val finalPhotoUri = selectedPhotoUri?.let { uri ->
+                    // Copy to internal storage to ensure persistent access
+                    if (uri.scheme == "content") {
+                        val savedPath = PhotoHelper.saveImageToInternalStorage(this@AddExpenseActivity, uri)
+                        if (savedPath != null) Uri.parse(savedPath) else null
+                    } else {
+                        uri
+                    }
+                }
+
                 val expenseId = expenseRepository.addExpense(expense).toInt()
-                selectedPhotoUri?.let { uri ->
+                finalPhotoUri?.let { uri ->
                     expenseRepository.addPhoto(ExpensePhoto(expenseId = expenseId, photoUri = uri))
                 }
                 Toast.makeText(this@AddExpenseActivity, "Expense saved", Toast.LENGTH_SHORT).show()
