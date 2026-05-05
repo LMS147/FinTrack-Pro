@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fintrackpro.databinding.FragmentDashboardBinding
 import com.example.fintrackpro.ui.expense.AddExpenseActivity
 import com.example.fintrackpro.utils.CurrencyFormatter
+import com.example.fintrackpro.utils.SessionManager
 import kotlinx.coroutines.launch
 import com.example.fintrackpro.data.Repository.CategoryRepository
 
@@ -23,7 +24,7 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
 
     // In a real app, obtain userId from shared preferences or auth manager
-    private val userId = 1 // temporary default; replace with actual logged-in user ID
+    private val userId: Int by lazy { SessionManager(requireContext()).getUserId() }
 
     // ViewModel factory – replace with proper DI if available
     private val viewModel: DashboardViewModel by viewModels {

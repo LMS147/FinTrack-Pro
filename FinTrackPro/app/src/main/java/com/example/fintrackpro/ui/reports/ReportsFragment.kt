@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.fintrackpro.R
 import com.example.fintrackpro.databinding.FragmentReportsBinding
-import com.example.fintrackpro.ui.reports.PieChartManager
+import com.example.fintrackpro.utils.SessionManager
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,7 +20,7 @@ class ReportsFragment : Fragment(R.layout.fragment_reports) {
     private var _binding: FragmentReportsBinding? = null
     private val binding get() = _binding!!
 
-    private val userId = 1 // replace with auth
+    private val userId: Int by lazy { SessionManager(requireContext()).getUserId() }
     private val viewModel: ReportsViewModel by viewModels {
         ReportsViewModelFactory(requireContext(), userId)
     }

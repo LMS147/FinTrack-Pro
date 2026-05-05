@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.fintrackpro.R
 import com.example.fintrackpro.databinding.FragmentBudgetBinding
 import com.example.fintrackpro.utils.CurrencyFormatter
+import com.example.fintrackpro.utils.SessionManager
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -20,7 +21,7 @@ class BudgetFragment : Fragment(R.layout.fragment_budget) {
     private var _binding: FragmentBudgetBinding? = null
     private val binding get() = _binding!!
 
-    private val userId = 1 // obtain from auth
+    private val userId: Int by lazy { SessionManager(requireContext()).getUserId() }
     private val viewModel: BudgetViewModel by viewModels {
         BudgetViewModelFactory(requireContext(), userId)
     }

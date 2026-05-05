@@ -2,7 +2,6 @@ package com.example.fintrackpro.ui.expense
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -17,8 +16,8 @@ import com.example.fintrackpro.data.Repository.CategoryRepository
 import com.example.fintrackpro.data.Repository.ExpenseRepository
 import com.example.fintrackpro.databinding.ActivityAddExpenseBinding
 import com.example.fintrackpro.utils.PhotoHelper
+import com.example.fintrackpro.utils.SessionManager
 import kotlinx.coroutines.launch
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,7 +31,7 @@ class AddExpenseActivity : AppCompatActivity() {
     private var selectedDate: Date = Date()
     private var selectedStartTime: String? = null
     private var selectedEndTime: String? = null
-    private val userId = 1 // get from auth
+    private val userId: Int by lazy { SessionManager(this).getUserId() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

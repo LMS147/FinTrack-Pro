@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.fintrackpro.data.entity.User
 import com.example.fintrackpro.data.Repository.AuthRepository
 import com.example.fintrackpro.utils.SecurityUtils
+import com.example.fintrackpro.utils.SessionManager
 import com.example.fintrackpro.utils.ValidationUtils
 import kotlinx.coroutines.launch
 
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
  * ViewModel handling authentication logic for Login and Registration.
  */
 class AuthViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _loginState = MutableLiveData<LoginState>()
@@ -38,6 +40,7 @@ class AuthViewModel(
 
                 if (user != null) {
                     authRepository.updateLastLogin(user.userId)
+                    sessionManager.saveSession(user.userId)
                     _loginState.value = LoginState.Success(user)
                 } else {
                     _loginState.value = LoginState.Error("Invalid username or password")

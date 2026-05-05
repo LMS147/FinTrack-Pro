@@ -16,6 +16,7 @@ import com.example.fintrackpro.R
 import com.example.fintrackpro.databinding.FragmentProfileBinding
 import com.example.fintrackpro.ui.auth.LoginActivity
 import com.example.fintrackpro.utils.PhotoHelper
+import com.example.fintrackpro.utils.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private val userId = 1 // Replace with actual logged-in user ID
+    private val userId: Int by lazy { SessionManager(requireContext()).getUserId() }
     private val viewModel: ProfileViewModel by viewModels {
         ProfileViewModelFactory(requireContext(), userId)
     }
@@ -65,6 +66,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         binding.btnLogout.setOnClickListener {
             // Clear session and go to Login
+            SessionManager(requireContext()).clearSession()
             startActivity(Intent(requireContext(), LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             })

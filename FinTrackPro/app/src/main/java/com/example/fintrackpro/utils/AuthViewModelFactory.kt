@@ -13,8 +13,9 @@ class AuthViewModelFactory(private val context: Context) : ViewModelProvider.Fac
         if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
             val database = FinTrackDatabase.getDatabase(context)
             val repository = AuthRepository(database.userDao())
+            val sessionManager = SessionManager(context)
             @Suppress("UNCHECKED_CAST")
-            return AuthViewModel(repository) as T
+            return AuthViewModel(repository, sessionManager) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

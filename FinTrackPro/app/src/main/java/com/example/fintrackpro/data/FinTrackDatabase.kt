@@ -22,7 +22,7 @@ import com.example.fintrackpro.data.Dao.*
         Budget::class,
         ExpensePhoto::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

@@ -6,13 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.fintrackpro.data.Repository.BudgetRepository
 import com.example.fintrackpro.databinding.ActivitySetBudgetBinding
 import com.example.fintrackpro.utils.CurrencyFormatter
+import com.example.fintrackpro.utils.SessionManager
 import kotlinx.coroutines.*
 
 class SetBudgetActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySetBudgetBinding
     private val scope = CoroutineScope(Dispatchers.Main + Job())
-    private val userId = 1
+    private val userId: Int by lazy { SessionManager(this).getUserId() }
     private var currentCurrency: String = "ZAR"
 
     override fun onCreate(savedInstanceState: Bundle?) {

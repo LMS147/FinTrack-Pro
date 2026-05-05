@@ -12,7 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fintrackpro.R
 import com.example.fintrackpro.databinding.FragmentExpenseBinding
-import com.example.fintrackpro.ui.expense.ExpenseAdapter
+import com.example.fintrackpro.utils.SessionManager
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,7 +21,7 @@ class ExpenseFragment : Fragment(R.layout.fragment_expense) {
 
     private var _binding: FragmentExpenseBinding? = null
     private val binding get() = _binding!!
-    private val userId = 1 // from auth
+    private val userId: Int by lazy { SessionManager(requireContext()).getUserId() }
 
     private val viewModel: ExpenseViewModel by viewModels {
         ExpenseViewModelFactory(requireContext(), userId)
