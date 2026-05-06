@@ -3,7 +3,7 @@ package com.example.fintrackpro.ui.reports
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fintrackpro.data.Dao.ExpenseDao.CategorySpendingSummary
+import com.example.fintrackpro.data.entity.CategorySpendingSummary
 import com.example.fintrackpro.databinding.ItemCategoryBreakdownBinding
 import com.example.fintrackpro.utils.CurrencyFormatter
 

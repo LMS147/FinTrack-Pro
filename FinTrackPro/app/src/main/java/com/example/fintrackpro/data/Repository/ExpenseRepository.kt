@@ -1,6 +1,7 @@
 package com.example.fintrackpro.data.Repository
 
 import com.example.fintrackpro.data.Dao.ExpenseDao
+import com.example.fintrackpro.data.entity.CategorySpendingSummary
 import com.example.fintrackpro.data.entity.Expense
 import com.example.fintrackpro.data.entity.ExpensePhoto
 import kotlinx.coroutines.flow.*
@@ -42,6 +43,6 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
 
     fun getCategorySpendingTotals(
         userId: Int, startDate: Date, endDate: Date
-    ): Flow<List<ExpenseDao.CategorySpendingSummary>> =
+    ): Flow<List<CategorySpendingSummary>> =
         expenseDao.getCategorySpendingTotals(userId, startDate, endDate)
 }

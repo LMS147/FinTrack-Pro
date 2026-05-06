@@ -1,7 +1,7 @@
 package com.example.fintrackpro.ui.reports
 
 import com.example.fintrackpro.R
-import com.example.fintrackpro.data.Dao.ExpenseDao.CategorySpendingSummary
+import com.example.fintrackpro.data.entity.CategorySpendingSummary
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData

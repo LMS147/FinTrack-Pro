@@ -69,11 +69,18 @@ class ReportsFragment : Fragment(R.layout.fragment_reports) {
                     PieChartManager.setupPieChart(binding.pieChart, state.categoryTotals)
 
                     // Update breakdown list
-                    binding.rvCategoryBreakdown.adapter = CategoryBreakdownAdapter(
-                        state.categoryTotals,
-                        state.totalSpent,
-                        state.currency
-                    )
+                    if (state.categoryTotals.isEmpty()) {
+                        binding.tvEmptyState.visibility = View.VISIBLE
+                        binding.rvCategoryBreakdown.visibility = View.GONE
+                    } else {
+                        binding.tvEmptyState.visibility = View.GONE
+                        binding.rvCategoryBreakdown.visibility = View.VISIBLE
+                        binding.rvCategoryBreakdown.adapter = CategoryBreakdownAdapter(
+                            state.categoryTotals,
+                            state.totalSpent,
+                            state.currency
+                        )
+                    }
 
                     // Update date button texts
                     state.startDate?.let { binding.btnStartDate.text = dateFormatter.format(it) }

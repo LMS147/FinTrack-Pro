@@ -67,14 +67,28 @@
             app:layout_scrollFlags="scroll|enterAlways" />
 
         <!-- Category Breakdown List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCategoryBreakdown"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="16dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_category_breakdown" />
+            android:layout_marginTop="16dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategoryBreakdown"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_category_breakdown" />
+
+            <TextView
+                android:id="@+id/tvEmptyState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No transactions in this period"
+                android:textColor="@color/text_secondary"
+                android:visibility="gone" />
+        </FrameLayout>
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

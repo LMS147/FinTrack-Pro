@@ -2,7 +2,7 @@ package com.example.fintrackpro.ui.reports
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fintrackpro.data.Dao.ExpenseDao.CategorySpendingSummary
+import com.example.fintrackpro.data.entity.CategorySpendingSummary
 import com.example.fintrackpro.data.Repository.AuthRepository
 import com.example.fintrackpro.data.Repository.ExpenseRepository
 import kotlinx.coroutines.flow.*
@@ -26,17 +26,28 @@ class ReportsViewModel(
     }
 
     fun setDateRange(start: Date, end: Date) {
-        _startDate.value = start
-        _endDate.value = end
+        _startDate.value = normalizeStartDate(start)
+        _endDate.value = normalizeEndDate(end)
     }
 
     fun refresh() {
-        // Update end date to end of today to catch new entries
-        _endDate.value = getDefaultEndDate()
+        // Trigger a refresh of the flows
+        _endDate.value = normalizeEndDate(Calendar.getInstance().time)
     }
 
-    private fun getDefaultEndDate(): Date {
+    private fun normalizeStartDate(date: Date): Date {
         val cal = Calendar.getInstance()
+        cal.time = date
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        return cal.time
+    }
+
+    private fun normalizeEndDate(date: Date): Date {
+        val cal = Calendar.getInstance()
+        cal.time = date
         cal.set(Calendar.HOUR_OF_DAY, 23)
         cal.set(Calendar.MINUTE, 59)
         cal.set(Calendar.SECOND, 59)
@@ -47,21 +58,23 @@ class ReportsViewModel(
     private fun observeReport() {
         viewModelScope.launch {
             combine(
-                combine(_startDate, _endDate) { start, end -> Pair(start, end) }
-                    .flatMapLatest { (start, end) ->
-                        expenseRepository.getCategorySpendingTotals(userId, start, end)
-                            .map { Triple(it, start, end) }
-                    },
+                _startDate,
+                _endDate,
                 authRepository.getUserFlow(userId)
-            ) { (totals, start, end), user ->
-                ReportsUiState(
-                    categoryTotals = totals,
-                    totalSpent = totals.sumOf { it.total },
-                    startDate = start,
-                    endDate = end,
-                    currency = user?.defaultCurrency ?: "ZAR",
-                    isLoading = false
-                )
+            ) { start, end, user ->
+                Triple(start, end, user)
+            }.flatMapLatest { (start, end, user) ->
+                expenseRepository.getCategorySpendingTotals(userId, start, end)
+                    .map { totals ->
+                        ReportsUiState(
+                            categoryTotals = totals,
+                            totalSpent = totals.sumByDouble { summary -> summary.total },
+                            startDate = start,
+                            endDate = end,
+                            currency = user?.defaultCurrency ?: "ZAR",
+                            isLoading = false
+                        )
+                    }
             }.catch { e ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -76,10 +89,11 @@ class ReportsViewModel(
     private fun getDefaultStartDate(): Date {
         val cal = Calendar.getInstance()
         cal.set(Calendar.DAY_OF_MONTH, 1)
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        return cal.time
+        return normalizeStartDate(cal.time)
+    }
+
+    private fun getDefaultEndDate(): Date {
+        return normalizeEndDate(Calendar.getInstance().time)
     }
 
     data class ReportsUiState(

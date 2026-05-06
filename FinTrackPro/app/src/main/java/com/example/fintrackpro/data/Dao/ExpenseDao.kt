@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Delete
+import com.example.fintrackpro.data.entity.CategorySpendingSummary
 import com.example.fintrackpro.data.entity.Expense
 import com.example.fintrackpro.data.entity.ExpensePhoto
 import kotlinx.coroutines.flow.Flow
@@ -57,12 +58,6 @@ interface ExpenseDao {
         LIMIT :limit
     """)
     fun getRecentExpenses(userId: Int, limit: Int = 5): Flow<List<Expense>>
-
-    // Data class for the query result above
-    data class CategorySpendingSummary(
-        val name: String,
-        val total: Double
-    )
 
     @Query("SELECT * FROM expenses WHERE expenseId = :expenseId")
     suspend fun getExpenseById(expenseId: Int): Expense?
