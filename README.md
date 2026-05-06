@@ -85,9 +85,9 @@ FinTrack Pro is a personal finance management application for Android designed t
 
 ## Links:
 
-**Youtube**: https://youtu.be/GVuHL4nfCdk
-**OneDrive**: https://advtechonline-my.sharepoint.com/:v:/g/personal/st10436200_rcconnect_edu_za/IQDKzevbvOF0Q5M5JI0mc4qaAfAWk2jsNBwUBhz6YHHW9ts?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=CjpRAU
-**GitHub**: https://github.com/LMS147/FinTrack-Pro
+- **Youtube**: https://youtu.be/GVuHL4nfCdk
+- **OneDrive**: https://advtechonline-my.sharepoint.com/:v:/g/personal/st10436200_rcconnect_edu_za/IQDKzevbvOF0Q5M5JI0mc4qaAfAWk2jsNBwUBhz6YHHW9ts?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=CjpRAU
+- **GitHub**: https://github.com/LMS147/FinTrack-Pro
 ---
 Developed for personal finance enthusiasts.
 
